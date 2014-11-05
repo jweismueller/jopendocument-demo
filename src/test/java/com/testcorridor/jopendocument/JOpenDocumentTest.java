@@ -70,19 +70,19 @@ public class JOpenDocumentTest {
 		vaadinOut += "<text:p>Hardcoded list.</text:p>";
 		vaadinOut += "</text:list-item>";
 		vaadinOut += "</text:list>";
-		// vaadinOut =
-		// JDOMUtils.output(OOXML.get(XMLVersion.OD).encodeRT(vaadinOut,
-		// styles));
 
 		template.setField("content", vaadinOut);
 
 		// table
 		List<Map<String, String>> months = new ArrayList<Map<String, String>>();
-		months.add(createTableRow("January", "-12", "3"));
-		months.add(createTableRow("February", "-8", "5"));
-		months.add(createTableRow("March", "-5", "12"));
-		months.add(createTableRow("April", "-1", "15"));
-		months.add(createTableRow("May", "3", "21"));
+		String descr1 = "Description\nwith linebreak and [b]formats[/b].";
+		descr1 = JDOMUtils.output(OOXML.get(XMLVersion.OD).encodeRT(descr1, OoUtil.styles()));
+		descr1 = descr1.replaceAll(Pattern.quote("\n"), "<text:line-break />");
+		months.add(createTableRow("January", "-12", "3", descr1));
+		months.add(createTableRow("February", "-8", "5", ""));
+		months.add(createTableRow("March", "-5", "12", ""));
+		months.add(createTableRow("April", "-1", "15", ""));
+		months.add(createTableRow("May", "3", "21", ""));
 		template.setField("months", months);
 
 		// hiding
@@ -131,11 +131,12 @@ public class JOpenDocumentTest {
 		// template.saveAs(outFile);
 	}
 
-	static Map<String, String> createTableRow(String n, String min, String max) {
+	static Map<String, String> createTableRow(String n, String min, String max, String descr) {
 		final Map<String, String> res = new HashMap<String, String>();
 		res.put("name", n);
 		res.put("min", min);
 		res.put("max", max);
+		res.put("richDescription", descr);
 		return res;
 	}
 
